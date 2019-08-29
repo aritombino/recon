@@ -38,7 +38,8 @@ sublist3r -d $dominio -o $pathtmp+subli &
 
 wait
 
-(/usr/local/bin/anubis -t $dominio -o $pathtmp+anubis ; (head -n -1 $pathtmp+anubis | tail -n +22 > $pathtmp+anubis2))
+#(/usr/local/bin/anubis -t $dominio -o $pathtmp+anubis ; (head -n -1 $pathtmp+anubis | tail -n +22 > $pathtmp+anubis2))
+sudomy -s shodan,dnsdumpster,webarchive,virustotal,censys,dnsdb,entrust,crtsh,bufferover -tO -d $dominio
 aquatone-discover -d $dominio
 
 
@@ -50,9 +51,11 @@ sed -i 's/,.*$//' $pathtmp+aquatone
 
 curl --request GET  --url https://api.securitytrails.com/v1/domain/$dominio/subdomains --header 'apikey: MANDALETUKEY ' |jq  -r '.subdomains' | jq '.[]' | tr -d \" |sed "s/ *$/.$dominio/g" > $pathtmp+security
 
+###agarro el date para buscar la salida de sudomy
+d=`date +%m-%d-%Y`
 
 #### ME ARMO LA LISTA Y LA ORDENOOOOOO
-cat $pathtmp+aquatone $pathtmp+amass $pathtmp+subli $pathtmp+anubis2 $pathtmp+security $pathtmp+subfinder> $subdominios.tmp
+cat $pathtmp+aquatone $pathtmp+amass $pathtmp+subli $pathtmp+anubis2 $pathtmp+security $pathtmp+subfinder /opt/Sudomy/output/$d/$dominio/subdomain.txt > $subdominios.tmp
 
 ####borro lienas al ped  espacios y basura al final
 sed -i '/^$/d' $subdominios.tmp
@@ -62,6 +65,11 @@ sed -i "/*/d" $subdominios.tmp
 sort -u $subdominios.tmp  > $subdominios
 
 
-dirsearch -L $subdominios -r -w /usr/share/wordlists/personal.txt -e "*" --simple-report="$pathtrabajo/dirsearch/$dominio" --timeout=15  --max-retries=3 -x=403,404 &
+##muevo el resultado del takeover al path de trabajo
+
+mv /opt/Sudomy/output/$d/$dominio/TakeOver.txt $pathtrabajo
+
+dirsearch -L $subdominios -r -w /usr/share/wordlists/personal.txt -e "*" --simple-report="$pathtrabajo/dirsearch/$dominio.txt" --timeout=15  --max-retries=3 --exclude-status=302,403,404,301,502 &
+cat $subdominios | aquatone -scan-timeout 10000 -screenshot-timeout 10000 -http-timeout 10000 -out "$pathtrabajo/aquatone/gral"
 nmap -sS  -iL $subdominios --top-ports 500 -oA  "$pathtrabajo/nmap/$dominio" &
 eyewitness -f $subdominios --web  --prepend-https
