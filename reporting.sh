@@ -13,7 +13,7 @@
 dominio="$1"
 pathtrabajo="$2"
 subdominios="$2/$1"subdominios.txt
-securitytrailsapi=`cat /opt/securitytrails-api`
+securitytrails-api=`cat /opt/securitytrails-api`
 
 #####paths temporales para que vaya guardando por si se caee todo
 pathtmp="/tmp/aaaa"
@@ -50,7 +50,7 @@ sed -i 's/,.*$//' $pathtmp+aquatone
 
 ## BUSCO TODO EN security trails para obtener mas cositasssssssssssssssss y le saco las comillas al final porq joden
 
-curl --request GET  --url https://api.securitytrails.com/v1/domain/$dominio/subdomains --header "apikey: $securitytrailsapi" |jq  -r '.subdomains' | jq '.[]' | tr -d \" |sed "s/ *$/.$dominio/g" > $pathtmp+security
+curl --request GET  --url https://api.securitytrails.com/v1/domain/$dominio/subdomains --header "apikey: $securitytrails-api" |jq  -r '.subdomains' | jq '.[]' | tr -d \" |sed "s/ *$/.$dominio/g" > $pathtmp+security
 
 ###agarro el date para buscar la salida de sudomy
 d=`date +%m-%d-%Y`
