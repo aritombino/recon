@@ -13,7 +13,7 @@
 dominio="$1"
 pathtrabajo="$2"
 subdominios="$2/$1"subdominios.txt
-securitytrailsapi=`cat /opt/securitytrails-api`
+securitytrailsapi=`cat /opt/securitytrailsapi`
 
 #####paths temporales para que vaya guardando por si se caee todo
 pathtmp="/tmp/aaaa"
