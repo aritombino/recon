@@ -68,7 +68,10 @@ sort -u $subdominios.tmp  > $subdominios
 
 mv /opt/Sudomy/output/$d/$dominio/TakeOver.txt $pathtrabajo
 
-dirsearch -L $subdominios -r -w /usr/share/wordlists/personal.txt -e "*" --timeout=15  --max-retries=3 --exclude-status=301,302,403,404,429,502 > $pathtrabajo/dirsearch/$dominio.txt &
+
+###THXXX @maurosoria para usar la tool jajajjaj  https://github.com/maurosoria/dirsearch.git
+dirsearch -L $subdominios -r -w /usr/share/wordlists/personal.txt -E --timeout=15  --max-retries=3 --exclude-status=301,404,429,502 --simple-report=$pathtrabajo/dirsearch/$dominio.txt &
+
 cat $subdominios | aquatone -scan-timeout 10000 -screenshot-timeout 10000 -http-timeout 10000 -out "$pathtrabajo/aquatone/gral"
 nmap -sS  -iL $subdominios --top-ports 500 -oA  "$pathtrabajo/nmap/$dominio" &
 eyewitness -f $subdominios --web  --prepend-https
