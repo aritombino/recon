@@ -25,6 +25,7 @@ echo > $pathtmp+security
 echo > $subdominios
 echo > $pathtmp+aquatone
 echo > $pathtmp+subfinder
+echo > $pathtmp+findomain
 mkdir "$pathtrabajo/nmap"
 mkdir "$pathtrabajo/dirsearch"
 mkdir "$pathtrabajo/aquatone"
@@ -34,8 +35,9 @@ mkdir "$pathtrabajo/aquatone"
 # INICIA el ESCANEEOOOOOOOOOOO
 sublist3r -d $dominio -o $pathtmp+subli &
 ## va asi porque sino no me escribe nada
-/snap/amass/607/bin/amass -active -o $pathtmp+amass -d $dominio &
+/snap/bin/amass enum -active -o $pathtmp+amass -d $dominio &
 /opt/go/bin/subfinder -d $dominio -o $pathtmp+subfinder
+/usr/bin/findomain -t $dominio -u $pathtmp+findomain
 
 wait
 
